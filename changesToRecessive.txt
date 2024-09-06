@@ -1,0 +1,5 @@
+The following files have been changed to make a 'hacked' version which tests for recessive associations:
+./src/gemma_io.cpp
+./src/lm.cpp
+./src/lmm.cpp
+To find the changes, search for "added by FFS"
