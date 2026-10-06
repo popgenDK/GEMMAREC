@@ -25,7 +25,7 @@ BIMBAM input (`-g`) is never recoded.
 ## Usage
 
 Build with `make`. GSL and OpenBLAS are required; see `INSTALL.md`. The
-binary is `bin/gemma`. Use it like GEMMA, with three extra options:
+binary is `bin/gemmarec2`. Use it like GEMMA, with three extra options:
 
 | option | meaning |
 |---|---|
@@ -35,15 +35,15 @@ binary is `bin/gemma`. Use it like GEMMA, with three extra options:
 
 ```sh
 # kinship matrix and single-trait LMM, recessive model, minor allele tested
-bin/gemma -bfile data -minor -gk 1 -o kin
-bin/gemma -bfile data -minor -k output/kin.cXX.txt -lmm 4 -maf 0 -hom-maf 0.01 -o rec
+bin/gemmarec2 -bfile data -minor -gk 1 -o kin
+bin/gemmarec2 -bfile data -minor -k output/kin.cXX.txt -lmm 4 -maf 0 -hom-maf 0.01 -o rec
 
 # the same with the dominant model
-bin/gemma -bfile data -minor -dom -gk 1 -o kin_dom
-bin/gemma -bfile data -minor -dom -k output/kin_dom.cXX.txt -lmm 4 -o dom
+bin/gemmarec2 -bfile data -minor -dom -gk 1 -o kin_dom
+bin/gemmarec2 -bfile data -minor -dom -k output/kin_dom.cXX.txt -lmm 4 -o dom
 
 # linear model without kinship
-bin/gemma -bfile data -minor -lm 4 -o rec_lm
+bin/gemmarec2 -bfile data -minor -lm 4 -o rec_lm
 ```
 
 Use the same `-dom`/`-minor` options for `-gk` as for the association run,

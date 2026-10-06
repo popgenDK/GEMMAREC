@@ -1,7 +1,7 @@
 #!/bin/bash
 # chr1 subset: PLINK input with recoding vs BIMBAM 0/1 input (no recoding = plain GEMMA)
 set -e
-G=${GEMMA:-../../bin/gemma}
+G=${GEMMA:-../../bin/gemmarec2}
 export OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
 $G -bfile chr1 -gk 1 -o k_rec >/dev/null
 $G -bfile chr1 -gk 1 -dom -o k_dom >/dev/null

@@ -11,15 +11,15 @@ Both versions give identical association results for single-trait GWAS (`-gk`, `
 
 ```sh
 cd GEMMAREC2
-make                     # needs GSL and OpenBLAS; binary is bin/gemma
+make                     # needs GSL and OpenBLAS; binary is bin/gemmarec2
 
 # recessive model (default), testing the minor allele
-bin/gemma -bfile data -minor -gk 1 -o kin
-bin/gemma -bfile data -minor -k output/kin.cXX.txt -lmm 4 -o rec
+bin/gemmarec2 -bfile data -minor -gk 1 -o kin
+bin/gemmarec2 -bfile data -minor -k output/kin.cXX.txt -lmm 4 -o rec
 
 # dominant model: add -dom (also when making the kinship matrix)
-bin/gemma -bfile data -minor -dom -gk 1 -o kin_dom
-bin/gemma -bfile data -minor -dom -k output/kin_dom.cXX.txt -lmm 4 -o dom
+bin/gemmarec2 -bfile data -minor -dom -gk 1 -o kin_dom
+bin/gemmarec2 -bfile data -minor -dom -k output/kin_dom.cXX.txt -lmm 4 -o dom
 ```
 
 * Input must be PLINK (`-bfile`). Genotypes are recoded as A1/A1 → 1, others → 0 (recessive), or A1/A1 and A1/A2 → 1 (dominant, `-dom`). BIMBAM input is not recoded.
@@ -31,4 +31,4 @@ See [`GEMMAREC2/README.md`](GEMMAREC2/README.md) for details and tests.
 
 ## GEMMAREC (original)
 
-This is a modified version of [GEMMA v. 0.98.5](https://github.com/genetics-statistics/GEMMA/releases/tag/v0.98.5). The software is modified to perform association test with a recessive model instead of the default additive. See changesToRecessive.txt to see what has been changed. Note that the allele frequencies in the output should not be used! (In the output, `af` is half the frequency of A1/A1 homozygotes.) The binary is `bin/gemmaREC`.
+This is a modified version of [GEMMA v. 0.98.5](https://github.com/genetics-statistics/GEMMA/releases/tag/v0.98.5). The software is modified to perform association test with a recessive model instead of the default additive. See changesToRecessive.txt to see what has been changed. Note that the allele frequencies in the output should not be used! (In the output, `af` is half the frequency of A1/A1 homozygotes.) The binary is `bin/gemmarec1` (run `make` in this folder to build it).

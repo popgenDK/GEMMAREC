@@ -185,7 +185,7 @@ profile: LIBS += -Wl,--no-as-needed -lprofiler -Wl,--as-needed
 
 .PHONY: all test
 
-OUTPUT = $(BIN_DIR)/gemma
+OUTPUT = $(BIN_DIR)/gemmarec2
 
 # Detailed libary paths, D for dynamic and S for static
 

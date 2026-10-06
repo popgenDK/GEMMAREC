@@ -2,7 +2,7 @@
 # -minor: allele-swapped chr1 vs R reference (flip to minor allele, 0/1 coding as BIMBAM)
 # and vs the original chr1 .bed
 set -e
-G=${GEMMA:-../../bin/gemma}
+G=${GEMMA:-../../bin/gemmarec2}
 export OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
 for m in rec dom; do
   f=""; [ $m = dom ] && f="-dom"
