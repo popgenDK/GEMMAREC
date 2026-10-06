@@ -1,0 +1,18 @@
+GEMMAREC changes on top of GEMMA master (0.98.6). Search for "GEMMAREC" to find them.
+
+src/gemma_io.h    geno_model / hom_maf_level / minor_polarize / geno_flip globals,
+                  FreqColName(), GenoFlip(), and RecodeBedGenotype(), which recodes
+                  one PLINK genotype in place (optional A1/A2 flip, then
+                  recessive: HO->1, HE->0; dominant: HO->1, HE->1).
+src/gemma_io.cpp  definitions of the globals; RecodeBedGenotype() is called at every
+                  .bed decode (ReadFile_bed x3, PlinkKin x2, Plink_ReadOneSNP);
+                  -hom-maf filter in ReadFile_bed; with -minor, ReadFile_bed
+                  decides per SNP whether to flip (A1 freq > 0.5 in the analysed
+                  individuals) and swaps the alleles in snpInfo.
+src/lm.cpp        recoding in AnalyzePlink; output column freq_HO/freq_carrier = 2*maf.
+src/lmm.cpp       recoding in AnalyzePlink and AnalyzePlinkGXE; output column.
+src/mvlmm.cpp     recoding in AnalyzePlink and AnalyzePlinkGXE (missing in the old GEMMAREC); output column.
+src/gemma.cpp     -dom, -minor and -hom-maf options, help text, model written to the .log.txt file.
+src/param.cpp     range check for -hom-maf; -minor not allowed with -mbfile.
+
+The recessive recoding is bit-for-bit the same as the old "added by FFS" code.
