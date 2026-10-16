@@ -60,10 +60,9 @@ See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.
 | **yes** | 1. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor` | minor | gemma / gemmaPopgen |
 | **yes** | 2. dominant: gemmarec1 vs `gemmaPopgen -model dom -minor`, with beta of opposite sign and alleles swapped | major | gemma / gemmaPopgen |
 | **yes** | 3. recessive: gemmarec1 vs `gemmaPopgen -model rec` (no `-minor`) | mixed | gemma / gemmaPopgen |
-| **yes** | 4. as 1, but both use gemmarec1's GRM | minor | gemmaRec / gemmaRec |
-| no | 5. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed | gemma / gemmaPopgen |
-| no | 6. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemmaPopgen |
-| no | 7. as 1, but each program uses its own GRM. All SNPs differ. | minor | gemmaRec / gemmaPopgen |
+| no | 4. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed | gemma / gemmaPopgen |
+| no | 5. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemmaPopgen |
+| no | 6. as 1, but gemmarec1 uses its own GRM. All SNPs differ. | minor | gemmaRec / gemmaPopgen |
 
 "Same" means the same SNPs, the same tested allele and identical association
 statistics. GRM: **gemma** = made with original GEMMA (`gemma -gk 1`),
@@ -83,7 +82,7 @@ the outputs. It takes a few seconds and needs plink 1.9.
 original GEMMA** (`gemma -gk 1`, or `gemmaPopgen -gk 1`, which gives the
 identical GRM) and pass it to gemmarec1 with `-k`. A GRM made with
 `gemmarec1 -gk` is built from recessive-coded genotypes and gives different
-results (7). The GRM only has to be the same for both programs (4).
+results (6). In all comparisons gemmaPopgen uses its own GRM.
 The association tests use `-maf 0` unless stated otherwise.
 
 "plink allele order" is the A1 allele of the PLINK file given to gemmarec1:
@@ -95,14 +94,14 @@ the major allele for 3 of the 250 SNPs). gemmaPopgen always gets the original
   allele is the opposite of being homozygous for the major allele. So
   gemmarec1 on a file with A1 = major gives the dominant test for the minor
   allele, with the opposite sign of beta.
-* **Allele order (3, 5).** gemmarec1 always tests A1 from the `.bim`. To match
+* **Allele order (3, 4).** gemmarec1 always tests A1 from the `.bim`. To match
   `gemmaPopgen -minor`, the file must be pre-polarised so that A1 is the minor
   allele, for example with `plink --a1-allele`. Without `-minor`, gemmaPopgen
   also tests A1 from the `.bim`.
-* **SNP filter (6).** GEMMAREC's `-maf` filters on `freq_HO/2`, while
+* **SNP filter (5).** GEMMAREC's `-maf` filters on `freq_HO/2`, while
   gemmaPopgen's `-maf` uses the real minor allele frequency, as GEMMA does.
-* **GRM (4, 7).** Results are identical whenever both programs use the same
-  GRM. In 7 the GRM uses only 250 SNPs, which makes the difference large.
+* **GRM (6).** gemmarec1's own GRM differs from gemmaPopgen's. Here the GRM
+  uses only 250 SNPs, which makes the difference large.
 
 The frequency columns also differ. For the first SNP (A1 = A), gemmarec1 prints
 `af` = 0.093, which is `freq_HO/2`. gemmaPopgen prints GEMMA's `af` = 0.443 (the

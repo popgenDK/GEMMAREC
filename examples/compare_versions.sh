@@ -30,7 +30,7 @@ O="-bfile orig -snps snps.txt"   # original file (A1 as in the .bim)
 echo "SNPs: $(wc -l < minor.txt); A1 is the major allele in the original file for" \
      "$(awk 'NR==FNR{m[$1]=$2; next} ($2 in m) && m[$2]!=$5' minor.txt orig.bim | wc -l) of them"
 
-# GRMs, both with the default -maf 0.01: GEMMA's (additive, made by gemmaPopgen,
+# GRMs, both with the default -maf 0.01 (gemmaPopgen always uses its own): GEMMA's (additive, made by gemmaPopgen,
 # identical to gemma -gk 1) and GEMMAREC's (recessive-coded, -maf on freq_HO/2)
 q $P  $O -gk 1 -o K_gemma
 q $R1 $O -gk 1 -o K_rec
@@ -60,20 +60,18 @@ q $P  $O -k $KG -maf 0 -lmm 4 -model dom -minor -o pop_dom_minor
 q $P  $O -k $KG -maf 0 -lmm 4 -model rec -o pop_rec
 echo
 q $R1 -bfile minor -k $KR -maf 0 -lmm 4 -o rec1_minor_KR
-q $P  $O -k $KR -maf 0 -lmm 4 -model rec -minor -o pop_rec_minor_KR
 echo "== IDENTICAL results (same GRM, -maf 0 in the association)"
 cmp "1. rec: gemmarec1 on file with A1 = minor vs gemmaPopgen -minor" rec1_minor pop_rec_minor
 cmp "2. dom: gemmarec1 on file with A1 = major vs gemmaPopgen -minor" rec1_major pop_dom_minor flip
 cmp "3. rec: gemmarec1 vs gemmaPopgen, both on the original file" rec1 pop_rec
-cmp "4. as 1, but both use gemmarec1's GRM" rec1_minor_KR pop_rec_minor_KR
 
 echo
 echo "== DIFFERENT results"
-cmp "5. rec: gemmarec1 on original file vs gemmaPopgen -minor" rec1 pop_rec_minor
+cmp "4. rec: gemmarec1 on original file vs gemmaPopgen -minor" rec1 pop_rec_minor
 q $R1 -bfile minor -k $KG -lmm 4 -o rec1_minor_maf
 q $P  $O -k $KG -lmm 4 -model rec -minor -o pop_rec_minor_maf
-cmp "6. as 1, but default -maf 0.01" rec1_minor_maf pop_rec_minor_maf
-cmp "7. as 1, but each program uses its own GRM" rec1_minor_KR pop_rec_minor
+cmp "5. as 1, but default -maf 0.01" rec1_minor_maf pop_rec_minor_maf
+cmp "6. as 1, but gemmarec1 uses its own GRM" rec1_minor_KR pop_rec_minor
 
 echo
 echo "Frequency columns for the first SNP (gemmarec1 af = freq_HO/2; gemmaPopgen af = A1 freq, freq_nonref = freq_HO):"
