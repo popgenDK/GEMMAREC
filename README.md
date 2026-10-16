@@ -57,19 +57,20 @@ See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.
 
 | Same? | comparison | plink allele order | GRM (gemmarec1 / gemmaPopgen) |
 |---|---|---|---|
-| **yes** | 1. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor` | minor | gemma / gemma |
-| **yes** | 2. dominant: gemmarec1 vs `gemmaPopgen -model dom -minor`, with beta of opposite sign and alleles swapped | major | gemma / gemma |
-| **yes** | 3. recessive: gemmarec1 vs `gemmaPopgen -model rec` (no `-minor`) | mixed | gemma / gemma |
+| **yes** | 1. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor` | minor | gemma / gemmaPopgen |
+| **yes** | 2. dominant: gemmarec1 vs `gemmaPopgen -model dom -minor`, with beta of opposite sign and alleles swapped | major | gemma / gemmaPopgen |
+| **yes** | 3. recessive: gemmarec1 vs `gemmaPopgen -model rec` (no `-minor`) | mixed | gemma / gemmaPopgen |
 | **yes** | 4. as 1, but both use gemmarec1's GRM | minor | gemmaRec / gemmaRec |
-| no | 5. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed | gemma / gemma |
-| no | 6. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemma |
+| no | 5. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed | gemma / gemmaPopgen |
+| no | 6. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemmaPopgen |
 | no | 7. as 1, but each program uses its own GRM. All SNPs differ. | minor | gemmaRec / gemmaPopgen |
 
 "Same" means the same SNPs, the same tested allele and identical association
-statistics. GRM: **gemma** = made with original GEMMA (`gemma -gk 1`; in the
-script with `gemmaPopgen -gk 1`, which gives the identical GRM),
-**gemmaRec** = made with `gemmarec1 -gk 1` (recessive-coded genotypes),
-**gemmaPopgen** = made with `gemmaPopgen -gk 1` (identical to gemma). All GRMs
+statistics. GRM: **gemma** = made with original GEMMA (`gemma -gk 1`),
+**gemmaPopgen** = made with `gemmaPopgen -gk 1`, which is always identical to
+gemma's GRM (with the same SNP filters), **gemmaRec** = made with `gemmarec1 -gk 1` (recessive-coded
+genotypes). The script makes the gemma GRM with `gemmaPopgen -gk 1`, because
+the two are identical. All GRMs
 are made with the default `-maf 0.01`. For gemma and gemmaPopgen this filters
 on the real minor allele frequency. For gemmaRec it filters on `freq_HO/2`, so
 gemmaRec's GRM uses fewer SNPs (here 199 of 250, vs 234 for gemma).
