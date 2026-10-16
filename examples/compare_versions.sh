@@ -70,8 +70,8 @@ echo "== DIFFERENT results"
 cmp "4. rec: gemmarec1 on original file vs gemmaPopgen -minor" rec1 pop_rec_minor
 q $R1 -bfile minor -k $KG -lmm 4 -o rec1_minor_maf
 q $P  $O -k $KG -lmm 4 -model rec -minor -o pop_rec_minor_maf
-cmp "5. as 1, but default -maf 0.01" rec1_minor_maf pop_rec_minor_maf
-cmp "6. as 1, but gemmarec1 uses its own GRM" rec1_minor_KR pop_rec_minor
+cmp "5. rec, default -maf 0.01: gemmarec1 (A1 = minor) vs gemmaPopgen -minor" rec1_minor_maf pop_rec_minor_maf
+cmp "6. rec: gemmarec1 (A1 = minor, own GRM) vs gemmaPopgen -minor" rec1_minor_KR pop_rec_minor
 
 echo
 echo "Frequency columns for the first SNP (gemmarec1 af = freq_HO/2; gemmaPopgen af = A1 freq, freq_nonref = freq_HO):"

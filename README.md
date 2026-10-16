@@ -61,8 +61,8 @@ See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.
 | **yes** | 2. dominant: gemmarec1 vs `gemmaPopgen -model dom -minor`, with beta of opposite sign and alleles swapped | major | gemma / gemmaPopgen |
 | **yes** | 3. recessive: gemmarec1 vs `gemmaPopgen -model rec` (no `-minor`) | mixed | gemma / gemmaPopgen |
 | no | 4. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed | gemma / gemmaPopgen |
-| no | 5. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemmaPopgen |
-| no | 6. as 1, but gemmarec1 uses its own GRM. All SNPs differ. | minor | gemmaRec / gemmaPopgen |
+| no | 5. recessive, default `-maf 0.01`: gemmarec1 vs `gemmaPopgen -model rec -minor`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor | gemma / gemmaPopgen |
+| no | 6. recessive: gemmarec1 (with its own GRM) vs `gemmaPopgen -model rec -minor`. All SNPs differ. | minor | gemmaRec / gemmaPopgen |
 
 "Same" means the same SNPs, the same tested allele and identical association
 statistics. GRM: **gemma** = made with original GEMMA (`gemma -gk 1`),
