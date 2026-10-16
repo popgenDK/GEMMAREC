@@ -75,13 +75,31 @@ the tested minor allele. Without `-minor`, A1 is tested as before.
 * **New options:** `-dom`, `-minor` and `-hom-maf`.
 * **`-maf` is unchanged.** It still filters on the internal value, which is
   `freq_HO/2` (or `freq_carrier/2`), exactly as in the old GEMMAREC. With the
-  default `-maf 0.01`, SNPs with `freq_HO < 0.02` are removed. Use
+  default `-maf 0.01`, SNPs with `freq_HO < 0.02` are removed. The same
+  filter also decides which SNPs go into the kinship matrix (`-gk`). Use
   `-maf 0 -hom-maf X` to filter only on the genotype frequency.
 * **Multivariate LMM (`-lmm` with `-n` and several phenotypes) and
   `-calccor` now use the recoded genotypes too.** The old GEMMAREC did not
   recode genotypes in these code paths. Its multivariate LMM results on PLINK
   input used the additive model, even though the frequency column was
   computed from the recessive coding.
+
+## Comparison with gemmaPopgen and GEMMAREC
+
+| | GEMMAREC2 (this folder) | gemmaPopgen (`../gemmaPopgen`) | GEMMAREC (`..`) |
+|---|---|---|---|
+| binary | `bin/gemmarec2` | `bin/gemmaPopgen` | `bin/gemmarec1` |
+| based on | GEMMA 0.98.6 | GEMMA 0.98.6 | GEMMA 0.98.5 |
+| models | recessive (default), dominant (`-dom`) | additive, recessive, dominant (`-model`) | recessive |
+| GRM (`-gk`) | recoded with the model | always as in GEMMA (additive) | recoded (recessive) |
+| `-maf` filters on | `freq_HO/2` (or `freq_carrier/2`) | minor allele frequency, as in GEMMA | `freq_HO/2` |
+| frequency column | `freq_HO` / `freq_carrier` | `af` / `freq_HO` / `freq_carrier` | `af` = `freq_HO/2` (do not use) |
+| test the minor allele | `-minor` | `-minor` | no |
+
+Use GEMMAREC2 to reproduce old GEMMAREC analyses (see below). For new analyses,
+gemmaPopgen keeps the GRM and SNP filters as in GEMMA. With the same GRM (`-k`),
+GEMMAREC2 and gemmaPopgen give identical results for the SNPs both keep. They
+can keep different SNPs, because their `-maf` filters differ.
 
 ## Reproducing old GEMMAREC results
 

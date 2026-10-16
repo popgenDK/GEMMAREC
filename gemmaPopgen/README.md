@@ -61,7 +61,7 @@ bin/gemmaPopgen -bfile data -lm 4 -model rec -minor -o rec_lm
 
 ## Differences from GEMMAREC / GEMMAREC2
 
-GEMMAREC and GEMMAREC2 (in the parent folder of this repository) recode the
+GEMMAREC (`..`) and GEMMAREC2 (`../GEMMAREC2`) recode the
 genotypes everywhere, including the GRM and `-maf`. Their `-maf` filters on
 `freq_HO/2`, not on the minor allele frequency. gemmaPopgen recodes only for the
 association test. With the same GRM (`-k`) and the same SNPs, the association
