@@ -1,11 +1,29 @@
 # GEMMAREC: GEMMA with recessive (and dominant) association models
 
-This repository contains two versions:
+This repository contains three versions:
 
-* **GEMMAREC2** (folder [`GEMMAREC2/`](GEMMAREC2)) is the recommended version. It is based on GEMMA 0.98.6 and supports recessive and dominant models, reports correct genotype frequencies, and can test the minor allele.
+* **gemmaPopgen** (folder [`gemmaPopgen/`](gemmaPopgen)) is GEMMA 0.98.6 with a choice of model (`-model add|rec|dom`). The model only changes the association test. The GRM and the SNP filters (including `-maf`) are always exactly as in GEMMA, so the GRM is the same for every model, and `-model add` gives GEMMA's results.
+* **GEMMAREC2** (folder [`GEMMAREC2/`](GEMMAREC2)) is based on GEMMA 0.98.6 and supports recessive and dominant models, reports correct genotype frequencies, and can test the minor allele. Like GEMMAREC, it also recodes the genotypes for the GRM and for `-maf`.
 * **GEMMAREC** (this top folder) is the original version, based on GEMMA 0.98.5. It supports only the recessive model.
 
-Both versions give identical association results for single-trait GWAS (`-gk`, `-lm`, univariate `-lmm`). The models are only tested for single-trait GWAS.
+GEMMAREC and GEMMAREC2 give identical association results for single-trait GWAS (`-gk`, `-lm`, univariate `-lmm`). All models are only tested for single-trait GWAS.
+
+## gemmaPopgen: quick start
+
+```sh
+cd gemmaPopgen
+make                     # needs GSL and OpenBLAS; binary is bin/gemmaPopgen
+
+bin/gemmaPopgen -bfile data -gk 1 -o grm                       # GRM as in GEMMA
+bin/gemmaPopgen -bfile data -k output/grm.cXX.txt -lmm 4 -o add                     # additive (= GEMMA)
+bin/gemmaPopgen -bfile data -k output/grm.cXX.txt -lmm 4 -model rec -minor -o rec   # recessive
+bin/gemmaPopgen -bfile data -k output/grm.cXX.txt -lmm 4 -model dom -minor -o dom   # dominant
+```
+
+* `-minor` tests the minor allele. `-hom-maf X` removes SNPs with `freq_HO` (rec) or `freq_carrier` (dom) below X.
+* The frequency column is `af` (add), `freq_HO` (rec) or `freq_carrier` (dom).
+
+See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.
 
 ## GEMMAREC2: quick start
 
