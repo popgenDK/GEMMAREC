@@ -1,16 +1,16 @@
 gemmaPopgen changes on top of GEMMA master (0.98.6). Search for "gemmaPopgen" to find them.
 
 src/gemma_io.h    geno_model / minor_polarize / hom_maf_level / geno_flip / geno_freq
-                  globals; FreqColName(), FreqValue(), GenoFlip(), FlipBedGenotype()
+                  globals; NonrefHeader(), NonrefValue(), GenoFlip(), FlipBedGenotype()
                   and RecodeBedGenotype() (optional A1/A2 flip, then add/rec/dom coding).
 src/gemma_io.cpp  globals. ReadFile_bed (SNP filtering): GEMMA's filters are unchanged
                   (additive genotypes); with -minor the per-SNP flip is decided and the
-                  alleles swapped; for rec/dom the coded frequency is stored, and SNPs with
+                  alleles swapped; freq_nonref is stored; for rec/dom, SNPs with
                   no coded variation, failing -hom-maf, or (with covariates) failing -r2
                   on the coded genotype are removed. The kinship readers are NOT changed.
-src/lm.cpp        recoding in AnalyzePlink; frequency column by model.
-src/lmm.cpp       recoding in AnalyzePlink and AnalyzePlinkGXE; frequency column.
-src/mvlmm.cpp     recoding in AnalyzePlink and AnalyzePlinkGXE; frequency column (untested).
+src/lm.cpp        recoding in AnalyzePlink; extra last column freq_nonref (PLINK input).
+src/lmm.cpp       recoding in AnalyzePlink and AnalyzePlinkGXE; last column freq_nonref.
+src/mvlmm.cpp     recoding in AnalyzePlink and AnalyzePlinkGXE; last column freq_nonref (untested).
 src/gemma.cpp     -model, -minor, -hom-maf options, help text, model in the .log.txt file.
 src/param.cpp     -gk ignores -model/-minor/-hom-maf; errors for other analyses, BIMBAM
                   input, -mbfile, and -hom-maf with add.

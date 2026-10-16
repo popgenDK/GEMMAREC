@@ -111,6 +111,7 @@ void LMM::WriteFiles() {
     return;
   }
 
+  string tail; // gemmaPopgen: freq_nonref column, empty for -gene
   auto common_header = [&] () {
     if (a_mode != M_LMM2) {
       outfile << "beta" << "\t";
@@ -123,22 +124,22 @@ void LMM::WriteFiles() {
     switch(a_mode) {
     case M_LMM1:
       outfile << "l_remle" << "\t"
-              << "p_wald" << endl;
+              << "p_wald" << tail << endl;
       break;
     case M_LMM2:
     case M_LMM9:
       outfile << "l_mle" << "\t"
-              << "p_lrt" << endl;
+              << "p_lrt" << tail << endl;
       break;
     case M_LMM3:
-      outfile << "p_score" << endl;
+      outfile << "p_score" << tail << endl;
       break;
     case M_LMM4:
       outfile << "l_remle" << "\t"
               << "l_mle" << "\t"
               << "p_wald" << "\t"
               << "p_lrt" << "\t"
-              << "p_score" << endl;
+              << "p_score" << tail << endl;
       break;
     }
   };
@@ -157,22 +158,22 @@ void LMM::WriteFiles() {
     switch(a_mode) {
     case M_LMM1:
       outfile << st.lambda_remle << "\t"
-              << st.p_wald << endl;
+              << st.p_wald << tail << endl;
       break;
     case M_LMM2:
     case M_LMM9:
       outfile << st.lambda_mle << "\t"
-              << st.p_lrt << endl;
+              << st.p_lrt << tail << endl;
       break;
     case M_LMM3:
-      outfile << st.p_score << endl;
+      outfile << st.p_score << tail << endl;
       break;
     case M_LMM4:
       outfile << st.lambda_remle << "\t"
               << st.lambda_mle << "\t"
               << st.p_wald << "\t"
               << st.p_lrt << "\t"
-              << st.p_score << endl;
+              << st.p_score << tail << endl;
       break;
     }
   };
@@ -197,8 +198,9 @@ void LMM::WriteFiles() {
             << "n_miss" << "\t"
             << "allele1" << "\t"
             << "allele0" << "\t"
-            << FreqColName() << "\t";
+            << "af" << "\t";
 
+    tail = NonrefHeader(!file_bfile.empty()); // gemmaPopgen
     common_header();
 
     size_t t = 0;
@@ -212,8 +214,9 @@ void LMM::WriteFiles() {
       outfile << snpInfo[i].chr << "\t" << snpInfo[i].rs_number << "\t"
               << snpInfo[i].base_position << "\t" << snpInfo[i].n_miss << "\t"
               << snpInfo[i].a_minor << "\t" << snpInfo[i].a_major << "\t"
-              << fixed << setprecision(3) << FreqValue(snpInfo, i) << "	";
+              << fixed << setprecision(3) << snpInfo[i].maf << "\t";
 
+      tail = NonrefValue(!file_bfile.empty(), i); // gemmaPopgen
       sumstats(sumStat[t]);
       t++;
     }

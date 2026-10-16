@@ -143,6 +143,7 @@ void LM::WriteFiles() {
       }
     }
   } else {
+    string tail = NonrefHeader(!file_bfile.empty()); // gemmaPopgen
     outfile << "chr"
             << "\t"
             << "rs"
@@ -157,7 +158,7 @@ void LM::WriteFiles() {
             << "\t"
             << "allele0"
             << "\t"
-            << FreqColName()
+            << "af"
             << "\t";
 
     if (a_mode == 51) {
@@ -165,15 +166,15 @@ void LM::WriteFiles() {
               << "\t"
               << "se"
               << "\t"
-              << "p_wald" << endl;
+              << "p_wald" << tail << endl;
     } else if (a_mode == 52) {
-      outfile << "p_lrt" << endl;
+      outfile << "p_lrt" << tail << endl;
     } else if (a_mode == 53) {
       outfile << "beta"
               << "\t"
               << "se"
               << "\t"
-              << "p_score" << endl;
+              << "p_score" << tail << endl;
     } else if (a_mode == 54) {
       outfile << "beta"
               << "\t"
@@ -183,7 +184,7 @@ void LM::WriteFiles() {
               << "\t"
               << "p_lrt"
               << "\t"
-              << "p_score" << endl;
+              << "p_score" << tail << endl;
     } else {
     }
 
@@ -192,25 +193,26 @@ void LM::WriteFiles() {
       if (indicator_snp[i] == 0) {
         continue;
       }
+      tail = NonrefValue(!file_bfile.empty(), i); // gemmaPopgen
 
       outfile << snpInfo[i].chr << "\t" << snpInfo[i].rs_number << "\t"
               << snpInfo[i].base_position << "\t" << snpInfo[i].n_miss << "\t"
               << ni_test - snpInfo[i].n_miss << "\t" << snpInfo[i].a_minor
               << "\t" << snpInfo[i].a_major << "\t" << fixed << setprecision(3)
-              << FreqValue(snpInfo, i) << "	";
+              << snpInfo[i].maf << "\t";
 
       if (a_mode == 51) {
         outfile << scientific << setprecision(6) << sumStat[t].beta << "\t"
-                << sumStat[t].se << "\t" << sumStat[t].p_wald << endl;
+                << sumStat[t].se << "\t" << sumStat[t].p_wald << tail << endl;
       } else if (a_mode == 52) {
-        outfile << scientific << setprecision(6) << sumStat[t].p_lrt << endl;
+        outfile << scientific << setprecision(6) << sumStat[t].p_lrt << tail << endl;
       } else if (a_mode == 53) {
         outfile << scientific << setprecision(6) << sumStat[t].beta << "\t"
-                << sumStat[t].se << "\t" << sumStat[t].p_score << endl;
+                << sumStat[t].se << "\t" << sumStat[t].p_score << tail << endl;
       } else if (a_mode == 54) {
         outfile << scientific << setprecision(6) << sumStat[t].beta << "\t"
                 << sumStat[t].se << "\t" << sumStat[t].p_wald << "\t"
-                << sumStat[t].p_lrt << "\t" << sumStat[t].p_score << endl;
+                << sumStat[t].p_lrt << "\t" << sumStat[t].p_score << tail << endl;
       } else {
       }
       t++;

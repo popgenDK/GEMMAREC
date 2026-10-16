@@ -125,6 +125,7 @@ void MVLMM::WriteFiles() {
     return;
   }
 
+  string tail = NonrefHeader(!file_bfile.empty()); // gemmaPopgen
   outfile << "chr"
           << "\t"
           << "rs"
@@ -137,7 +138,7 @@ void MVLMM::WriteFiles() {
           << "\t"
           << "allele0"
           << "\t"
-          << FreqColName()
+          << "af"
           << "\t";
 
   for (size_t i = 0; i < n_ph; i++) {
@@ -150,17 +151,17 @@ void MVLMM::WriteFiles() {
   }
 
   if (a_mode == 1) {
-    outfile << "p_wald" << endl;
+    outfile << "p_wald" << tail << endl;
   } else if (a_mode == 2) {
-    outfile << "p_lrt" << endl;
+    outfile << "p_lrt" << tail << endl;
   } else if (a_mode == 3) {
-    outfile << "p_score" << endl;
+    outfile << "p_score" << tail << endl;
   } else if (a_mode == 4) {
     outfile << "p_wald"
             << "\t"
             << "p_lrt"
             << "\t"
-            << "p_score" << endl;
+            << "p_score" << tail << endl;
   } else {
   }
 
@@ -169,11 +170,12 @@ void MVLMM::WriteFiles() {
     if (indicator_snp[i] == 0) {
       continue;
     }
+    tail = NonrefValue(!file_bfile.empty(), i); // gemmaPopgen
 
     outfile << snpInfo[i].chr << "\t" << snpInfo[i].rs_number << "\t"
             << snpInfo[i].base_position << "\t" << snpInfo[i].n_miss << "\t"
             << snpInfo[i].a_minor << "\t" << snpInfo[i].a_major << "\t" << fixed
-            << setprecision(3) << FreqValue(snpInfo, i) << "	";
+            << setprecision(3) << snpInfo[i].maf << "\t";
 
     outfile << scientific << setprecision(6);
 
@@ -190,14 +192,14 @@ void MVLMM::WriteFiles() {
     }
 
     if (a_mode == 1) {
-      outfile << sumStat[t].p_wald << endl;
+      outfile << sumStat[t].p_wald << tail << endl;
     } else if (a_mode == 2) {
-      outfile << sumStat[t].p_lrt << endl;
+      outfile << sumStat[t].p_lrt << tail << endl;
     } else if (a_mode == 3) {
-      outfile << sumStat[t].p_score << endl;
+      outfile << sumStat[t].p_score << tail << endl;
     } else if (a_mode == 4) {
       outfile << sumStat[t].p_wald << "\t" << sumStat[t].p_lrt << "\t"
-              << sumStat[t].p_score << endl;
+              << sumStat[t].p_score << tail << endl;
     } else {
     }
 

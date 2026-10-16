@@ -59,20 +59,19 @@ double hom_maf_level = -1;
 vector<bool> geno_flip;
 vector<double> geno_freq;
 
-const char *FreqColName() {
-  if (geno_model == GENO_REC)
-    return "freq_HO";
-  if (geno_model == GENO_DOM)
-    return "freq_carrier";
-  return "af";
+string NonrefHeader(const bool plink) {
+  return plink ? "\tfreq_nonref" : "";
 }
 
-// Value for the frequency column: A1 frequency (add, as GEMMA), A1/A1
-// frequency (rec) or carrier frequency (dom).
-double FreqValue(const vector<SNPINFO> &snpInfo, const size_t i) {
-  if (geno_model == GENO_ADD || i >= geno_freq.size())
-    return snpInfo[i].maf;
-  return geno_freq[i];
+string NonrefValue(const bool plink, const size_t i) {
+  if (!plink)
+    return "";
+  char buf[32];
+  if (i < geno_freq.size() && geno_freq[i] >= 0)
+    snprintf(buf, sizeof(buf), "\t%.3f", geno_freq[i]);
+  else
+    snprintf(buf, sizeof(buf), "\tNA");
+  return buf;
 }
 
 // Print progress bar.
@@ -1097,11 +1096,11 @@ bool ReadFile_bed(const string &file_bed, const set<string> &setSnps,
 
     // gemmaPopgen: filters on the rec/dom coded genotype (after the GEMMA
     // filters above, which use the additive genotypes).
+    size_t n_obs = ni_test - n_miss;
+    size_t n_coded1 = (geno_model == GENO_REC) ? n_2 : n_1 + n_2;
+    double f = (double)n_coded1 / (double)n_obs;
+    geno_freq[t] = f; // freq_nonref
     if (geno_model != GENO_ADD) {
-      size_t n_obs = ni_test - n_miss;
-      size_t n_coded1 = (geno_model == GENO_REC) ? n_2 : n_1 + n_2;
-      double f = (double)n_coded1 / (double)n_obs;
-      geno_freq[t] = f;
       if (n_coded1 == 0 || n_coded1 == n_obs) { // no variation in coded genotype
         indicator_snp.push_back(0);
         continue;

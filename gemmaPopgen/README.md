@@ -6,14 +6,20 @@ PLINK input. **The model only changes the association test.** The kinship
 matrix (GRM) and the SNP filters are always computed exactly as in GEMMA, so
 the GRM is the same for every model.
 
-| `-model` | A1/A1 | A1/A2 | A2/A2 | frequency column |
+| `-model` | A1/A1 | A1/A2 | A2/A2 | last column `freq_nonref` |
 |---|---|---|---|---|
-| `add` (default) | 2 | 1 | 0 | `af` (A1 frequency, as GEMMA) |
-| `rec` | 1 | 0 | 0 | `freq_HO` (A1/A1 frequency) |
-| `dom` | 1 | 1 | 0 | `freq_carrier` (A1/A1 + A1/A2 frequency) |
+| `add` (default) | 2 | 1 | 0 | A1 carrier frequency (A1/A1 + A1/A2) |
+| `rec` | 1 | 0 | 0 | A1/A1 frequency |
+| `dom` | 1 | 1 | 0 | A1 carrier frequency (A1/A1 + A1/A2) |
 
 A1 is the tested allele (`allele1` in the output). By default it is the first
 allele in the `.bim`. With `-minor` it is always the minor allele.
+
+**Output.** The association output has exactly GEMMA's columns, including `af`
+(the A1 allele frequency), plus one extra last column, `freq_nonref`. It is the
+frequency of the non-reference individuals, i.e. those coded 1 in the model
+(see the table). Frequencies are computed over the analysed individuals with a
+non-missing genotype. `freq_nonref` is only added for PLINK input.
 
 > **Only tested for single-trait GWAS** (`-lm`, univariate `-lmm`).
 
@@ -38,7 +44,7 @@ bin/gemmaPopgen -bfile data -lm 4 -model rec -minor -o rec_lm
 |---|---|
 | `-model add\|rec\|dom` | genetic model for `-lm` and `-lmm` (default `add`) |
 | `-minor` | test the minor allele: A1/A2 are swapped for SNPs where A1 has frequency > 0.5 in the analysed individuals |
-| `-hom-maf X` | with `rec`/`dom`: also remove SNPs with `freq_HO`/`freq_carrier` below X or above 1−X |
+| `-hom-maf X` | with `rec`/`dom`: also remove SNPs with `freq_nonref` below X or above 1−X |
 
 ### SNP filtering
 
@@ -54,7 +60,8 @@ bin/gemmaPopgen -bfile data -lm 4 -model rec -minor -o rec_lm
 
 * `-gk` ignores `-model`, `-minor` and `-hom-maf` and prints a note, so the GRM
   is always GEMMA's.
-* With `-model add` and without `-minor`, the output is identical to GEMMA's.
+* With `-model add` and without `-minor`, the output is identical to GEMMA's,
+  apart from the extra last column `freq_nonref`.
 * `-model rec/dom` and `-minor` are only allowed with `-lm` and `-lmm` on
   PLINK input (`-bfile`). Other analyses (`-bslmm`, BIMBAM input, ...) give an error.
   The multivariate LMM also uses the model, but it is not tested.
@@ -76,10 +83,11 @@ With `GEMMA_PLAIN=/path/to/gemma`, it checks that:
 
 1. the GRM (`-gk 1`, `-gk 2`) is identical to plain GEMMA's for every model
    (also with `-minor`)
-2. with `-model add`, `-lm`/`-lmm` output files are identical to plain GEMMA's,
-   with and without covariates
+2. with `-model add`, `-lm`/`-lmm` output files are identical to plain GEMMA's
+   apart from the last column, with and without covariates
 3. `rec` and `dom`, with and without `-minor`, give exactly the same statistics,
-   alleles and SNP set as plain GEMMA run on 0/1 genotypes coded in R
+   alleles and SNP set as plain GEMMA run on 0/1 genotypes coded in R, and
+   `af` and `freq_nonref` agree with R
 4. `-hom-maf` keeps exactly the expected SNPs
 
 The code changes are listed in `changesToPopgen.txt`. The original GEMMA README

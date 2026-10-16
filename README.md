@@ -12,7 +12,7 @@ association with non-additive models.
 | models | additive, recessive, dominant (`-model add\|rec\|dom`) | recessive |
 | GRM (`-gk`) | always as in GEMMA (additive) | recoded (recessive) |
 | `-maf` filters on | minor allele frequency, as in GEMMA | `freq_HO/2` |
-| frequency column | `af` / `freq_HO` / `freq_carrier` | `af` = `freq_HO/2` (do not use) |
+| output columns | GEMMA's columns (with GEMMA's `af`) + last column `freq_nonref` | `af` = `freq_HO/2` (do not use) |
 | test the minor allele | `-minor` | no (A1 from the `.bim`) |
 
 A third version, **GEMMAREC2**, is in [`GEMMAREC2/`](GEMMAREC2). It reproduces
@@ -46,8 +46,9 @@ bin/gemmaPopgen -bfile data -k output/grm.cXX.txt -lmm 4 -model dom -minor -o do
 ```
 
 * `-minor` tests the minor allele. Without it, A1 from the `.bim` file is tested.
-* `-hom-maf X` also removes SNPs with `freq_HO` (rec) or `freq_carrier` (dom)
-  below X or above 1−X.
+* The output has GEMMA's columns plus a last column `freq_nonref`: the
+  frequency of individuals coded 1 (A1/A1 for rec, A1 carriers for dom and add).
+* `-hom-maf X` also removes SNPs with `freq_nonref` below X or above 1−X (rec/dom).
 * `-gk` ignores `-model`, `-minor` and `-hom-maf`.
 
 See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.

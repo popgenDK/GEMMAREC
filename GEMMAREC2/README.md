@@ -93,7 +93,7 @@ the tested minor allele. Without `-minor`, A1 is tested as before.
 | models | recessive (default), dominant (`-dom`) | additive, recessive, dominant (`-model`) | recessive |
 | GRM (`-gk`) | recoded with the model | always as in GEMMA (additive) | recoded (recessive) |
 | `-maf` filters on | `freq_HO/2` (or `freq_carrier/2`) | minor allele frequency, as in GEMMA | `freq_HO/2` |
-| frequency column | `freq_HO` / `freq_carrier` | `af` / `freq_HO` / `freq_carrier` | `af` = `freq_HO/2` (do not use) |
+| frequency column | `freq_HO` / `freq_carrier` (replaces `af`) | GEMMA's `af` + last column `freq_nonref` | `af` = `freq_HO/2` (do not use) |
 | test the minor allele | `-minor` | `-minor` | no |
 
 Use GEMMAREC2 to reproduce old GEMMAREC analyses (see below). For new analyses,

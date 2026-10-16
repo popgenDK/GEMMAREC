@@ -50,9 +50,12 @@ extern int geno_model;          // -model
 extern bool minor_polarize;     // -minor: test the minor allele
 extern double hom_maf_level;    // -hom-maf; -1 means not used
 extern vector<bool> geno_flip;  // per .bed SNP (file position): swap A1/A2
-extern vector<double> geno_freq; // per .bed SNP: freq of coded genotype 1
-const char *FreqColName();
-double FreqValue(const vector<SNPINFO> &snpInfo, const size_t i);
+extern vector<double> geno_freq; // per .bed SNP: freq_nonref (see below)
+// Last output column freq_nonref (PLINK input only): frequency of the
+// individuals coded 1 by the model, i.e. A1/A1 (rec) or A1 carriers (dom),
+// and A1 carriers for add. All other columns are as in GEMMA.
+string NonrefHeader(const bool plink);
+string NonrefValue(const bool plink, const size_t i);
 inline bool GenoFlip(const size_t t) {
   return t < geno_flip.size() && geno_flip[t];
 }
