@@ -55,43 +55,54 @@ See [`gemmaPopgen/README.md`](gemmaPopgen/README.md) for details and tests.
 
 ## Examples: when GEMMAREC and gemmaPopgen give the same results
 
-[`examples/compare_versions.sh`](examples/compare_versions.sh) runs all three
-versions on 250 SNPs of the mouse example data and compares the outputs. It
-takes a few seconds. These are its results:
+| Same? | comparison | plink allele order |
+|---|---|---|
+| **yes** | 1. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor` | minor |
+| **yes** | 2. dominant: gemmarec1 vs `gemmaPopgen -model dom -minor`, with beta of opposite sign and alleles swapped | major |
+| **yes** | 3. recessive: gemmarec1 vs `gemmaPopgen -model rec` (no `-minor`) | mixed |
+| no | 4. recessive: gemmarec1 vs `gemmaPopgen -model rec -minor`. The 3 SNPs with A1 = major allele differ. | mixed |
+| no | 5. as 1, with the default `-maf 0.01`. gemmaPopgen keeps 16 more SNPs; the 199 shared SNPs are identical. | minor |
+| no | 6. as 1, but gemmarec1 uses its own GRM (`gemmarec1 -gk`). All SNPs differ. | minor |
 
-| | comparison | SNPs | beta, p_wald |
-|---|---|---|---|
-| **same** | 1. recessive, same GRM (`-k`), `-maf 0`: gemmarec1 vs `gemmaPopgen -model rec` | 212 = 212 | identical |
-| **same** | 2. dominant, same GRM, `-maf 0`: `gemmarec2 -dom` vs `gemmaPopgen -model dom` | 234 = 234 | identical |
-| differ | 3. default `-maf 0.01` | 190 vs 212 | identical for the 190 shared SNPs |
-| differ | 4. each program uses its own GRM from `-gk` | 212 = 212 | different (p_wald up to 0.96 apart) |
-| differ | 5. `gemmaPopgen -minor` vs gemmarec1 | 212 = 212 | different for 4 SNPs |
+"Same" means the same SNPs, the same tested allele and identical association
+statistics.
 
-So the association test is the same in all versions. The results differ only
-because of:
+[`examples/compare_versions.sh`](examples/compare_versions.sh) runs gemmarec1
+(GEMMAREC) and gemmaPopgen on 250 SNPs of the mouse example data and compares
+the outputs. It takes a few seconds and needs plink 1.9.
 
-* **SNP filter (3).** GEMMAREC's `-maf` filters on `freq_HO/2`, while
+**To get the same results from gemmarec1 as from gemmaPopgen, make the GRM with
+original GEMMA** (`gemma -gk 1`, or `gemmaPopgen -gk 1`, which gives the
+identical GRM) and pass it to gemmarec1 with `-k`. A GRM made with
+`gemmarec1 -gk` is built from recessive-coded genotypes and gives different
+results. All examples use GEMMA's GRM and `-maf 0` unless stated otherwise.
+
+"plink allele order" is the A1 allele of the PLINK file given to gemmarec1:
+the minor allele, the major allele, or mixed (the original file, where A1 is
+the major allele for 3 of the 250 SNPs). gemmaPopgen always gets the original
+(mixed) file.
+
+* **Dominant (2).** gemmarec1 has no dominant model, but carrying the minor
+  allele is the opposite of being homozygous for the major allele. So
+  gemmarec1 on a file with A1 = major gives the dominant test for the minor
+  allele, with the opposite sign of beta.
+* **Allele order (3, 4).** gemmarec1 always tests A1 from the `.bim`. To match
+  `gemmaPopgen -minor`, the file must be pre-polarised so that A1 is the minor
+  allele, for example with `plink --a1-allele`. Without `-minor`, gemmaPopgen
+  also tests A1 from the `.bim`.
+* **SNP filter (5).** GEMMAREC's `-maf` filters on `freq_HO/2`, while
   gemmaPopgen's `-maf` uses the real minor allele frequency, as GEMMA does.
-  Here gemmaPopgen keeps 22 extra SNPs, which have MAF ≥ 0.01 but
-  `freq_HO/2` < 0.01.
-* **GRM (4).** `gemmarec1 -gk` builds the GRM from recessive-coded genotypes,
-  while gemmaPopgen always builds GEMMA's additive GRM. Here the GRM uses only
-  250 SNPs, which makes the difference large. Pass the same GRM with `-k` to get
-  identical results.
-* **Tested allele (5).** GEMMAREC always tests A1 from the `.bim`. With
-  `-minor`, gemmaPopgen tests the minor allele. In these data A1 is the major
-  allele for 4 SNPs (e.g. rs6316488), so those SNPs test different homozygotes.
-  Without `-minor` the results are the same.
+* **GRM (6).** Here the GRM uses only 250 SNPs, which makes the difference
+  large.
 
 The frequency columns also differ. For the first SNP (A1 = A), gemmarec1 prints
 `af` = 0.093, which is `freq_HO/2`. gemmaPopgen prints GEMMA's `af` = 0.443 (the
 A1 allele frequency) and `freq_nonref` = 0.185 (the A1/A1 frequency).
 
-The script uses `bin/gemmarec1`, `GEMMAREC2/bin/gemmarec2` and
-`gemmaPopgen/bin/gemmaPopgen`. Other locations can be given with the
-`GEMMAREC1`, `GEMMAREC2` and `GEMMAPOPGEN` environment variables. If the
-pre-built `bin/gemmarec1` does not run (see below), build it in a copy of this
-folder and point `GEMMAREC1` to it.
+The script uses `bin/gemmarec1` and `gemmaPopgen/bin/gemmaPopgen`. Other
+locations can be given with the `GEMMAREC1` and `GEMMAPOPGEN` environment
+variables. If the pre-built `bin/gemmarec1` does not run (see below), build it
+in a copy of this folder and point `GEMMAREC1` to it.
 
 ## GEMMAREC (original)
 
